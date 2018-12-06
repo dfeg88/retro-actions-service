@@ -1,6 +1,7 @@
 package com.moneysupermarket.retroactions.controller;
 
 import com.moneysupermarket.retroactions.domain.RetroAction;
+import com.moneysupermarket.retroactions.response.RetroActionResponse;
 import com.moneysupermarket.retroactions.service.RetroActionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +18,14 @@ public class RetroActionController {
     private RetroActionService retroActionService;
 
     @PostMapping(value = "/action")
-    public ResponseEntity<RetroAction> save(@RequestBody RetroAction retroAction) {
+    public ResponseEntity<RetroActionResponse> save(@RequestBody RetroAction retroAction) {
         retroActionService.save(retroAction);
-        return new ResponseEntity<>(retroAction, HttpStatus.OK);
+        return new ResponseEntity<>(RetroActionResponse
+                .builder()
+                .id(retroAction.getId())
+                .message("Action created")
+                .build(),
+                HttpStatus.OK);
     }
 
     @GetMapping("/action/{id}")
@@ -40,16 +46,26 @@ public class RetroActionController {
                 : new ResponseEntity<>(retroActions, HttpStatus.OK);
     }
 
-    @PutMapping("/action/{id}")
-    public ResponseEntity<RetroAction> update(@PathVariable String id, @RequestBody RetroAction retroAction) {
-        retroActionService.update(id, retroAction);
-        return new ResponseEntity<>(retroAction, HttpStatus.OK);
+    @PutMapping("/action")
+    public ResponseEntity<RetroActionResponse> update(@RequestBody RetroAction retroAction) {
+        retroActionService.update(retroAction);
+        return new ResponseEntity<>(RetroActionResponse
+                .builder()
+                .id(retroAction.getId())
+                .message("Action updated")
+                .build(),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/action/{id}")
-    public ResponseEntity<RetroAction> delete(@PathVariable String id) {
+    public ResponseEntity<RetroActionResponse> delete(@PathVariable String id) {
         retroActionService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(RetroActionResponse
+                .builder()
+                .id(id)
+                .message("Action deleted")
+                .build(),
+                HttpStatus.OK);
     }
 
 }

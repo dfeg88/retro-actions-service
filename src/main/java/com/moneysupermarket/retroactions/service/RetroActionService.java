@@ -26,17 +26,13 @@ public class RetroActionService {
         return retroActionsRepository.findAll();
     }
 
-    public void update(String id, RetroAction retroAction) {
-        retroActionsRepository.findById(id)
+    public void update(RetroAction retroAction) {
+        retroActionsRepository.findById(retroAction.getId())
                 .map(action -> {
                     action.setTitle(retroAction.getTitle());
                     action.setDescription(retroAction.getDescription());
                     action.setStatus(retroAction.getStatus());
                     return retroActionsRepository.save(action);
-                })
-                .orElseGet(() -> {
-                    retroAction.setId(id);
-                    return retroActionsRepository.save(retroAction);
                 });
     }
 
